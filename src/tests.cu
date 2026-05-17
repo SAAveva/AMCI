@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#include "math.h"
+#include "vmath.h"
 
 void coordTransformTest() {
 	/* Not a real test yet.. */

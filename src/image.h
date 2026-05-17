@@ -11,6 +11,5 @@ typedef struct {
 } ImageRGBA;
 
 void imageRGBAInit(ImageRGBA *, int, int);
+void imageRGBAFree(ImageRGBA *);
 void imagePrintPixels(ImageRGBA *);
-
-void copyArrayToImage(ArrayFloat *, ImageRGBA *);

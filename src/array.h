@@ -1,6 +1,6 @@
 #pragma once
 
-#include "math.h"
+#include <cuda_runtime.h>
 
 typedef struct {
 	int width;
@@ -9,4 +9,4 @@ typedef struct {
 } ArrayFloat;
 	
 void arrayFloatInit(ArrayFloat *, int, int);
-int arrayGetIndex(Vec2, int);
+__device__  __host__ int arrayGetIndex(int, int, int);

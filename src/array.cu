@@ -2,15 +2,14 @@
 #include <stdlib.h>
 
 #include "array.h"
-#include "math.h"
 
 void arrayFloatInit(ArrayFloat *array, int width, int height) {
 	array->width = width;
 	array->height = height;
-	array->points = (float *)malloc(width * height * sizeof(float));
+	array->points = (float *)malloc(width * height * sizeof(float) * 4);
 	bzero(array->points, width * height);
 }
 
-int arrayGetIndex(Vec2 point, int width) {
-	return point.y * width + point.x;
+__device__ __host__ int arrayGetIndex(int row, int column, int width) {
+	return column * width + row;
 }
