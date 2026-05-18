@@ -1,12 +1,26 @@
-#include <stdio.h>
 #include <math.h>
 
 #include "vmath.h"
 #include "image.h"
 #include "mandelbrot.h"
 
+__device__ bool check_periodicity(double x, double y) {
+    double q = (x - 0.25) * (x - 0.25) + y * y;
+    if (q * (q + (x - 0.25)) < 0.25 * y * y) {
+        return true;
+    }
+    if ((x + 1.0) * (x + 1.0) + y * y < 0.0625) {
+        return true; 
+    }
+    return false;
+}
+
 __device__ int divergance(Vec2D point, double *mag_sq) {
-    int max_iter = 10000;
+	if (check_periodicity(point.x, point.y)) {
+		return -1;
+	}
+
+    int max_iter = 1000;
     Vec2D z;
     z.x = 0;
     z.y = 0;
@@ -15,15 +29,13 @@ __device__ int divergance(Vec2D point, double *mag_sq) {
         COMPLEX_MUL(z, z, z);
         COMPLEX_ADD(z, point, z);
         
-        // Assuming your macro does: *mag_sq = (z.x * z.x) + (z.y * z.y);
         COMPLEX_MAG(z, *mag_sq); 
         
-        // 65536.0 is an escape radius of 256 (256 * 256 = 65536)
         if (*mag_sq >= 65536) {
-            return iter; // Returns 0, 1, 2... up to 999
+            return iter;
         }
     }
-    return -1; // Point is trapped inside the set
+    return -1;
 }
 
 __global__ void colorPoint(MBConfig *config) {
@@ -56,14 +68,10 @@ __global__ void colorPoint(MBConfig *config) {
 		double frequency = 0.005; 
 		double t = smooth_i * frequency;
 
-		// 3. Ultra-smooth Cosine Palette Generation
-		// Formula: Color = A + B * cos(2 * PI * (C * t + D))
-		// This specific configuration gives an incredibly beautiful, bright neon psychedelic profile:
 		unsigned char r = (unsigned char)(255.0 * (0.5 + 0.5 * cos(6.28318 * (1.0 * t + 0.00))));
 		unsigned char g = (unsigned char)(255.0 * (0.5 + 0.5 * cos(6.28318 * (1.0 * t + 0.33))));
 		unsigned char b = (unsigned char)(255.0 * (0.5 + 0.5 * cos(6.28318 * (1.0 * t + 0.67))));
 
-		// 4. Write directly to your texture
 		config->image->pixels[idx]   = r;
 		config->image->pixels[idx+1] = g;
 		config->image->pixels[idx+2] = b;
