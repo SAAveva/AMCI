@@ -41,22 +41,22 @@ ErrorState uiStateInit(UIState *state, const char *win_title, int width, int hei
 	cudaMallocManaged((void **)&state->mb->image, sizeof(ImageRGBA));
 	imageRGBAInit(state->mb->image, width, height);
 
-	state->mb->zoom				= 1;
+	state->mb->zoom			= 1;
 	state->mb->zoom_factor		= .95;
 	state->mb->translation.x	= 0;
 	state->mb->translation.y	= 0;
 	state->mb->translation_step	= 20;
 
-	state->mb->cuda_block_N			= 1024;
-	state->mb->cuda_grid_N			= width * height / state->mb->cuda_block_N + 1;
+	state->mb->cuda_block_N		= 1024;
+	state->mb->cuda_grid_N		= width * height / state->mb->cuda_block_N + 1;
 
-	state->running				= true;
-	state->update_view			= true;
+	state->running			= true;
+	state->update_view		= true;
 
-	double real_start			= -2;
-	double real_end				= 1;
-	double imag_start			= -2;
-	double imag_end				= 2;
+	double real_start		= -2;
+	double real_end			= 1;
+	double imag_start		= -2;
+	double imag_end			= 2;
 
 	cudaMallocManaged((void **)&state->mb->SPACE_A, sizeof(Space));
 	cudaMallocManaged((void **)&state->mb->SPACE_B, sizeof(Space));
