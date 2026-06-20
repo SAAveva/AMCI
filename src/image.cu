@@ -4,11 +4,10 @@
 
 #include "image.h"
 #include "array.h"
-#include "vmath.h"
 
 void imageRGBAInit(ImageRGBA *image, int width, int height) {
-	image->width = width;
-	image->height = height;
+	image->width 	= width;
+	image->height 	= height;
 	cudaMallocManaged((void **)&image->pixels, width * height * 4);
 
 	for (int i = 0;i < height;++i) {
